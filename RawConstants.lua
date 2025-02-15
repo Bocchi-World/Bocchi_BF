@@ -26,3 +26,15 @@ MeleesId =  {
     "Godhuman",
     "SanguineArt"
 } 
+
+
+TasksOrder = 
+{
+    "ColosseumPuzzle", 
+    "EvoRace",
+    "Wenlocktoad",
+    "ThirdSeaPuzzle",
+    "Saber", 
+    "SecondSeaPuzzle",
+    "LevelFarm"
+}
