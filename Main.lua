@@ -1,13 +1,64 @@
-local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController"} 
+--[[
+    @ todo: sửa combatcontroller thêm cả search trong replicatedstorage 
+]]
+
+Config = 
+{
+    Team = "Pirates", 
+    Configuration = 
+    {
+        HopWhenIdle = true, 
+        AutoHop = true, 
+        AutoHopDelay = 10 * 60
+    },
+    Items = {
+        -- Melees 
+        Superhuman = true, 
+        GodHuman = true, 
+        
+        -- Swords 
+        Saber = true,
+        LegendarySword = true,
+        Canvander = true, 
+        BuddySword = true, 
+        CursedDualKatana = true, 
+        
+        -- Guns 
+        Kabucha = true, 
+        SperentBow = true, 
+        SoulGuitar = true, 
+        
+    }, 
+    
+    Utilly = 
+    {
+        BlackScreen = true, 
+    }, 
+    
+    Authorize = 
+    {
+        GrantCode = "", 
+        SendData = true, 
+        AllowToControl = true,
+        HookdataUrl = ""
+    },  
+}
+
+
+Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
+
+local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler"}
+
 local CDN_HOST = "https://raw.githubusercontent.com/Bocchi-World/Bocchi_BF/refs/heads/main/"
 
 ScriptStorage = {
     IsInitalized = false, 
     PlayerData = {}, 
-    
+    Melees = {}, 
+    Enemies = {},
     Connections = {
         LocalPlayer = {}
-    }
+    }, 
 } 
 
 for _, Part in PARTS do 
@@ -23,15 +74,18 @@ Humanoid = Character:WaitForChild("Humanoid")
 HumanoidRootPart = Character:WaitForChild("HumanoidRootPart") 
 
 Services = {} 
-Remotes = {} 
+Remotes = Services.ReplicatedStorage.Remotes
+
+Tasks = {} 
 
 setmetatable(Services, {__index = function(_, Index) 
     return game:GetService(Index)
 end
 }); 
 
-setmetatable(Remotes, {__index = function(_, Index) 
-        return Services.ReplicatedStorage.Remotes[Index]
+
+setmetatable(ScriptStorage.Enemies, {__index = function(_, Index) 
+        return Services.Workspace.Enemies:FindFirstChild(Index) or Services.ReplicatedStorage:FindFirstChild(Index)
     end 
 })
 
@@ -86,3 +140,29 @@ Players.PlayerAdded:Connect(function(Player)
         RegisterLocalPlayerEventsConnection(Player) 
     end 
 end) 
+
+local LogCache = {} 
+
+function RefreshTasksData() 
+    for _, TaskName in TasksOrder do 
+        local Task = ScriptStorage.FunctionsHandler[TaskName] 
+        if not Task and not LogCache[TaskName] then 
+            print("[ Debug ] Task", Name, "is not registered yet") 
+            LogCache[TaskName] = true 
+        else 
+            local Refresh = Task.Methods.Refresh 
+            local Start = Task.Methods.Start 
+            local RefreshValue = Refresh:Call() 
+            
+            if RefreshValue then 
+                Start:Call()
+            end 
+        end 
+    end 
+end 
+
+task.spawn(function() 
+    while task.wait() do
+        RefreshTasksData()
+    end 
+end)
