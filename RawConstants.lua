@@ -38,3 +38,5 @@ TasksOrder =
     "SecondSeaPuzzle",
     "LevelFarm"
 }
+
+MaxLevel = 2550
