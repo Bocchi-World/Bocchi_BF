@@ -1,57 +1,88 @@
-local Exports = {
-    CurrentLevel = 2, 
-    DoubleQuest = true, 
-    CurrentQuests = {},
-    BlacklistedQuestIds = {
-        BartiloQuest = 1, 
-        CitizenQuest = 1, 
-        Trainees = 1, 
-        MarineQuest = 1, 
+local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController"} 
+local CDN_HOST = "https://raw.githubusercontent.com/Bocchi-World/Bocchi_BF/refs/heads/main/"
+
+ScriptStorage = {
+    IsInitalized = false, 
+    PlayerData = {}, 
+    
+    Connections = {
+        LocalPlayer = {}
     }
 } 
 
-repeat wait() until game.Players.LocalPlayer.DataLoaded and ScriptStorage and ScriptStorage.IsInitalized
-
-Exports.Quests = require(game.ReplicatedStorage.Quests) 
-
-function Exports.Set(Self, Index, Value) 
-    Self[Index] = Value
+for _, Part in PARTS do 
+    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
+    print("[ Debug ] Try to include", Part)
 end 
 
-function Exports.RefreshQuest(Self) 
-    local QuestLevelFlag = 0  
-    local CurrentQuestData 
+Players = game.Players 
+LocalPlayer = Players.LocalPlayer 
+Character = LocalPlayer.Character 
+
+Humanoid = Character:WaitForChild("Humanoid") 
+HumanoidRootPart = Character:WaitForChild("HumanoidRootPart") 
+
+Services = {} 
+Remotes = {} 
+
+setmetatable(Services, {__index = function(_, Index) 
+    return game:GetService(Index)
+end
+}); 
+
+setmetatable(Remotes, {__index = function(_, Index) 
+        return Services.ReplicatedStorage.Remotes[Index]
+    end 
+})
+
+function AwaitUntilPlayerLoaded(Player, Timeout) 
+    repeat wait() until Player.Character 
     
-    for QuestID, QuestDatas in Exports.Quests do 
-        if not Exports.BlacklistedQuestIds[QuestID] then 
-            if QuestDatas[0].LevelReq > QuestLevelFlag and QuestDatas[0].LevelReq <= ScriptStorage.PlayerData.Level then 
-                QuestLevelFlag = QuestDatas[0].LevelReq  
-                CurrentQuestData = QuestDatas
+    Player.Character:WaitForChild("Humanoid") 
+    repeat wait() until Player.Character.Humanoid.Health > 0
+end 
+
+function RefreshPlayerData (Player) 
+    for _, ChildInstance in Player.Data:GetChildren() do 
+        pcall(function() 
+            ScriptStorage.PlayerData[ChildInstance.Name] = ChildInstance.Value 
+        end)
+    end 
+end 
+
+function RegisterLocalPlayerEventsConnection() 
+    
+    for _, Connection in ScriptStorage.Connections.LocalPlayer do 
+        pcall(function() 
+            Connection:Disconnect() 
+        end) 
+    end 
+    
+    AwaitUntilPlayerLoaded(LocalPlayer) 
+    
+    pcall(function() 
+        for _, ChildInstance in LocalPlayer.Data do 
+            if not ChildInstance:IsA("Folder") then 
+                ScriptStorage.Connections.LocalPlayer[ChildInstance.Name] = ChildInstance:GetPropertyChangedSignal("Value"):Connect(RefreshPlayerData)
             end 
         end 
-    end 
+    end)
     
-    local LastQuest = CurrentQuestData[#CurrentQuestData] 
+    LocalPlayer:SetAttribute("IsAvailable", true)
     
-    for _, Count in ChildQuestCount do 
-        if Count == 1 then 
-            table.remove(CurrentQuestData, #CurrentQuestData)
-        end 
-    end 
+    ScriptStorage.Connections.LocalPlayer["HealthCheck"] = LocalPlayer.Character:WaitForChild("Humanoid"):GetPropertyChangedSignal("Health"):Connect(function() 
+        local Health = LocalPlayer.Character.Humanoid.Health 
+        
+        LocalPlayer:SetAttribute("IsAvailable", Health > 10)
+        ScriptStorage.LocalPlayerHealth = Health
+    end)
     
-    Self.CurrentQuests = CurrentQuestData 
 end 
 
-function Exports.GetCurrentQuest(Self) 
-    
-    local QuestIndex = #Self.CurrentQuests < Self.CurrentLevel and 1 or 2 
-    
-    
-    return Self.CurrentQuests[QuestIndex]
-end 
+RegisterLocalPlayerEventsConnection(LocalPlayer) 
 
-function Exports.MarkAsCompleted(Self)
-    Self.CurrentLevel = Self.CurrentLevel == 2 and 1 or 2
-end  
-
-return Exports
+Players.PlayerAdded:Connect(function(Player) 
+    if tostring(Player) == tostring(LocalPlayer) then 
+        RegisterLocalPlayerEventsConnection(Player) 
+    end 
+end) 
