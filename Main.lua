@@ -61,10 +61,6 @@ ScriptStorage = {
     }, 
 } 
 
-for _, Part in PARTS do 
-    print("[ Debug ] Try to include", Part)
-    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
-end 
 
 Players = game.Players 
 LocalPlayer = Players.LocalPlayer 
@@ -90,6 +86,12 @@ setmetatable(ScriptStorage.Enemies, {__index = function(_, Index)
         return Services.Workspace.Enemies:FindFirstChild(Index) or Services.ReplicatedStorage:FindFirstChild(Index)
     end 
 })
+
+
+for _, Part in PARTS do 
+    print("[ Debug ] Try to include", Part)
+    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
+end 
 
 function AwaitUntilPlayerLoaded(Player, Timeout) 
     repeat wait() until Player.Character 
