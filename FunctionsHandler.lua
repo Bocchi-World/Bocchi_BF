@@ -8,6 +8,7 @@ setmetatable(Exports, {
         QueryResult = rawget(Self, Index) 
         
         if not QueryResult then 
+            
             return {
                 Register = function(Coditional) 
                     if Coditional == false then return end 
@@ -110,7 +111,16 @@ end
 -- LP Controller 
 
 Exports.LocalPlayerController.Register()
+-- Exp Redeem 
+
+Exports.ExpRedeem:Register() 
+
+-- Level Farm 
+
+Exports.LevelFarm:Register() 
+
 -- Items / Sword
+
 Exports.Saber:Register()
 Exports.Rengoku:Register()
 Exports.Yama:Register()
@@ -169,6 +179,79 @@ Exports.ElectricClaw:Register()
 Exports.DragonTalon:Register()
 Exports.Godhuman:Register()
 
+-- Exp Redeem 
+do
+    Exports.ExpRedeem:RegisterMethod("Refresh", function() 
+        return ScriptStorage.PlayerData.Level < MaxLevel and getsenv(game.ReplicatedStorage.GuideModule)._G.ServerData.ExpBoost == 0 
+    end)
+    
+    Exports.ExpRedeem:RegisterMethod("Start", function() 
+        local Code = ({
+                "Sub2CaptainMaui",
+                "CODE_SERVICIO",
+                "CINCODEMAYO_BOOST",
+                "15B_BESTBROTHERS",
+                "DEVSCOOKING",
+                "GAMERROBOT_YT",
+                "ADMINGIVEAWAY",
+                "GAMER_ROBOT_1M",
+                "TY_FOR_WATCHING",
+                "kittgaming",
+                "Sub2Fer999",
+                "Enyu_is_Pro",
+                "Magicbus",
+                "JCWK",
+                "Starcodeheo",
+                "Bluxxy",
+                "fudd10_v2",
+                "FUDD10",
+                "BIGNEWS",
+                "THEGREATACE",
+                "SUB2GAMERROBOT_EXP1",
+                "Sub2OfficialNoobie",
+                "StrawHatMaine",
+                "SUB2NOOBMASTER123",
+                "Sub2Daigrock",
+                "Axiore",
+                "TantaiGaming"
+            })[math.random(1, 25)]
+        
+        print("[ Debug ] Try to redeem x2 code:", Code)
+        Remotes.Redeem:InvokeServer(Code)
+        wait() 
+    end)
+
+end
+
+-- Level Farm 
+
+do 
+    Exports.LevelFarm:RegisterMethod("Refresh", function() 
+            Exports.LevelFarm:Set("CurrentProgressLevel", 1)
+            return true 
+    end)
+    
+    Exports.LevelFarm:RegisterMethod("Start", function() 
+        
+        local Level = Exports.LevelFarm:Get("CurrentProgressLevel")
+        
+        if Level == 1 then 
+            local MonName, NpcPosition, QuestId, QuestIndex = ScriptStorage.QuestManager.GetCurrentQuest() 
+            
+            local CurrentClaimQuest = ScriptStorage.QuestManager.GetCurrentClaimQuest()
+            
+            if CurrentClaimQuest then 
+                if CurrentClaimQuest ~= MonName then
+                    return ScriptStorage.QuestManager.AbandonQuest() 
+                end 
+            else 
+                ScriptStorage.QuestManager.StartQuest(QuestId, QuestIndex)
+            end 
+            
+            ScriptStorage.CombatController.Attack(MonName)
+        end
+    end)
+end 
 -- LP Controller 
 
 do 
@@ -354,4 +437,3 @@ do
     Remotes.RefreshQuestPro.OnClientEvent:Connect(Exports.Saber.Methods.Refresh.Callback);
 end
 
-return Exports
