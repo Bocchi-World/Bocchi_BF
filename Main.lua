@@ -47,7 +47,7 @@ Config =
 
 Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
 
-local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler"}
+local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler", "Hooks"}
 
 local CDN_HOST = "https://raw.githubusercontent.com/Bocchi-World/Bocchi_BF/refs/heads/main/"
 
@@ -125,17 +125,17 @@ function RegisterLocalPlayerEventsConnection()
     LocalPlayer:SetAttribute("IsAvailable", true)
     
     ScriptStorage.Connections.LocalPlayer["HealthCheck"] = LocalPlayer.Character:WaitForChild("Humanoid"):GetPropertyChangedSignal("Health"):Connect(function() 
+        
         local Health = LocalPlayer.Character.Humanoid.Health 
         
         LocalPlayer:SetAttribute("IsAvailable", Health > 10)
         ScriptStorage.LocalPlayerHealth = Health
     end)
-    
 end 
 
 RegisterLocalPlayerEventsConnection(LocalPlayer) 
 
-Players.PlayerAdded:Connect(function(Player) 
+Players.PlayerAdded:Connect(function(Player)
     if tostring(Player) == tostring(LocalPlayer) then 
         RegisterLocalPlayerEventsConnection(Player) 
     end 
@@ -149,6 +149,7 @@ function RefreshTasksData()
         if not Task and not LogCache[TaskName] then 
             print("[ Debug ] Task", Name, "is not registered yet") 
             LogCache[TaskName] = true 
+            
         else 
             local Refresh = Task.Methods.Refresh 
             local Start = Task.Methods.Start 
@@ -160,6 +161,12 @@ function RefreshTasksData()
         end 
     end 
 end 
+
+ScriptStorage.Hooks.RegisterNotifyListener("level", function() 
+    ScriptStorage.QuestManager:RefreshQuest()
+end) 
+
+ScriptStorage.QuestManager:RefreshQuest()
 
 task.spawn(function() 
     while task.wait() do
