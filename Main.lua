@@ -72,20 +72,20 @@ HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 PlayerGui = LocalPlayer:WaitForChild("PlayerGui", 10) 
 
 Services = {} 
-Remotes = Services.ReplicatedStorage.Remotes
-
-Tasks = {} 
 
 setmetatable(Services, {__index = function(_, Index) 
     return game:GetService(Index)
 end
 }); 
 
-
 setmetatable(ScriptStorage.Enemies, {__index = function(_, Index) 
         return Services.Workspace.Enemies:FindFirstChild(Index) or Services.ReplicatedStorage:FindFirstChild(Index)
     end 
 })
+
+Remotes = Services.ReplicatedStorage.Remotes
+
+Tasks = {} 
 
 
 for _, Part in PARTS do 
