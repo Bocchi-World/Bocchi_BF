@@ -28,3 +28,5 @@ old = hookfunction(
         return old(a, b)
     end
 )
+
+return Exports
