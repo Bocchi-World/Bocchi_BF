@@ -45,7 +45,7 @@ Config =
 }
 
 
-Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
+game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
 
 local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler", "Hooks"}
 
