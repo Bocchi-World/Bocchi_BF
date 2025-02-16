@@ -44,8 +44,9 @@ Config =
     },  
 }
 
-
-game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
+if tostring(game.Players.LocalPlayer.Team) == "Natural" then 
+    game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
+end 
 
 local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler", "Hooks"}
 
