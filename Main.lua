@@ -92,10 +92,7 @@ Remotes = Services.ReplicatedStorage.Remotes
 Tasks = {} 
 
 
-for _, Part in PARTS do 
-    print("[ Debug ] Try to include", Part)
-    ScriptStorage[Part] = loadstring(readfile(FolderPath .. Part .. ".lua"))() 
-end 
+
 
 function AwaitUntilPlayerLoaded(Player, Timeout) 
     repeat wait() until Player.Character 
@@ -148,6 +145,11 @@ Players.PlayerAdded:Connect(function(Player)
         RegisterLocalPlayerEventsConnection(Player) 
     end 
 end) 
+
+for _, Part in PARTS do 
+    print("[ Debug ] Try to include", Part)
+    ScriptStorage[Part] = loadstring(readfile(FolderPath .. Part .. ".lua"))() 
+end 
 
 local LogCache = {} 
 
