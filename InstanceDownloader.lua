@@ -77,27 +77,39 @@ function GetLastestReposityCommitDate()
     return StringToEpoch(Result.commit.author.date), sha256(Result.commit.author.date)
 end 
 
-function Download() 
+function Download(ForceSegmant) 
     
     local StartTime = tick() 
     
-    for Index, Segmant in Segmants do
-        print("[ Debug ]", Index, "/", #Segmants, "Downloading", Segmant, "...") 
-        local Result = game:HttpGet(CDN_HOST .. Segmant .. ".lua") 
+    for Index, Segmant in Segmants do 
         
-        print("[ Debug ] Successfully written", Segmant, ".lua" )
-        
-        writefile(FolderPath .. Segmant .. ".lua", Result)
+        if not ForceSegmant or Segmant == ForceSegmant then 
+                
+            print("[ Debug ]", Index, "/", #Segmants, "Downloading", Segmant, "...") 
+            local Result = game:HttpGet(CDN_HOST .. Segmant .. ".lua") 
+            
+            print("[ Debug ] Successfully written", Segmant, ".lua" )
+            
+            writefile(FolderPath .. Segmant .. ".lua", Result)
+        end
     end
-    
 end 
 _ = not isfolder("Bocchi") and GenerateFolder(FolderStruct)
 
+
 local Date, Hash = GetLastestReposityCommitDate() 
 
-if not isfile(FolderPath .. "._fingerprint") or readfile(FolderPath .. "._fingerprint") ~= Hash then 
+if not isfile(FolderPath .. "._fingerprint") or ( readfile(FolderPath .. "._fingerprint") ~= Hash and os.time() - Date > 300 ) then
     print("[ Debug ] New version", Hash, "found, downloading...")
     Download()
     writefile(FolderPath .. "._fingerprint", Hash)
+end 
+
+
+for _, Segmant in Segmants do 
+    if not isfile(FolderPath .. Segmant .. ".lua") then  
+        print("[ Debug ] Segmant", Segmant, "is missing, collecting...")
+        Download(Segmant)
+    end
 end 
 
