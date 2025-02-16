@@ -44,9 +44,8 @@ Config =
     },  
 }
 
-if tostring(game.Players.LocalPlayer.Team) == "Natural" then 
-    game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
-end 
+
+game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
 
 local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler", "Hooks"}
 
@@ -63,8 +62,8 @@ ScriptStorage = {
 } 
 
 for _, Part in PARTS do 
-    print("[ Debug ] Try to include", Part)
     ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
+    print("[ Debug ] Try to include", Part)
 end 
 
 Players = game.Players 
@@ -73,6 +72,8 @@ Character = LocalPlayer.Character
 
 Humanoid = Character:WaitForChild("Humanoid") 
 HumanoidRootPart = Character:WaitForChild("HumanoidRootPart") 
+
+PlayerGui = LocalPlayer:WaitForChild("PlayerGui", 10) 
 
 Services = {} 
 Remotes = Services.ReplicatedStorage.Remotes
