@@ -13,7 +13,7 @@ local Exports = {
 local NpcList = require(game.ReplicatedStorage.GuideModule).Data.NPCList 
 local QuestFrame = PlayerGui.Main.Quest
 
-repeat wait() until game.Players.LocalPlayer.DataLoaded and ScriptStorage and ScriptStorage.IsInitalized
+repeat wait() until game.Players.LocalPlayer.DataLoaded and ScriptStorage 
 
 Exports.Quests = require(game.ReplicatedStorage.Quests) 
 
