@@ -49,7 +49,11 @@ game.ReplicatedStorage.Remotes.CommF_:InvokeServer("SetTeam", Config.Team)
 
 local PARTS = {"RawConstants", "Utilly", "QuestManager", "SpawnRegionLoader", "TweenController", "AttackController", "CombatController", "FunctionsHandler", "Hooks"}
 
+loadstring(game:HttpGet"https://github.com/Bocchi-World/Bocchi_BF/blob/main/InstanceDownloader.lua?raw=true")()
+
 local CDN_HOST = "https://raw.githubusercontent.com/Bocchi-World/Bocchi_BF/refs/heads/main/"
+
+local FolderPath = "Bocchi/Blox_Fruit/Assets/"
 
 ScriptStorage = {
     IsInitalized = false, 
@@ -90,7 +94,7 @@ Tasks = {}
 
 for _, Part in PARTS do 
     print("[ Debug ] Try to include", Part)
-    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
+    ScriptStorage[Part] = loadstring(readfile(FolderPath .. Part .. ".lua"))() 
 end 
 
 function AwaitUntilPlayerLoaded(Player, Timeout) 
