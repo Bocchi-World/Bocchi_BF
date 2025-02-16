@@ -2,11 +2,7 @@ local Exports = {
     Listeners = {}
 } 
 
-LastNotification = Instance.new("StringValue", workspace)
-
-LastNotification = "LastNotification"
-
-LastNotification.Changed:Connect(function(Content)
+NotificationCallBack = (function(Content)
     for ListenerContent, Callback in Exports.Listeners do 
         if string.find(string.lower(Content), string.lower(ListenerContent)) then 
             Callback(Content)
@@ -23,10 +19,12 @@ local old;
 old = hookfunction(
     require(ReplicatedStorage.Notification).new,
     function(a, b)
+        
         v21 = tostring(tostring(a or "") .. tostring(b or "")) or ""
-        workspace.LastNotification.Value = v21
+        NotificationCallBack(v21)
+        
         return old(a, b)
     end
-)
+) 
 
-return Exports
+return Exports 
