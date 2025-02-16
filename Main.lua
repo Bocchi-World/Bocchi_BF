@@ -62,8 +62,8 @@ ScriptStorage = {
 } 
 
 for _, Part in PARTS do 
-    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
     print("[ Debug ] Try to include", Part)
+    ScriptStorage[Part] = loadstring(game:HttpGet(CDN_HOST .. Part .. ".lua"))() 
 end 
 
 Players = game.Players 
