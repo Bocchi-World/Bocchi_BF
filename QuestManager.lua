@@ -10,6 +10,8 @@ local Exports = {
     }
 } 
 
+local NpcList = require(ReplicatedStorage.GuideModule).Data.NPCList 
+
 repeat wait() until game.Players.LocalPlayer.DataLoaded and ScriptStorage and ScriptStorage.IsInitalized
 
 Exports.Quests = require(game.ReplicatedStorage.Quests) 
@@ -39,6 +41,15 @@ function Exports.RefreshQuest(Self)
         end 
     end 
     
+    
+    for i, v in NPCList do
+        for i1, v1 in v.Levels do
+            if v1 == CurrentQuestData[#CurrentQuestData].LevelReq then
+                Self.CurrentNpc = i.CFrame
+            end
+        end
+    end 
+    
     Self.CurrentQuests = CurrentQuestData 
 end 
 
@@ -46,8 +57,7 @@ function Exports.GetCurrentQuest(Self)
     
     local QuestIndex = #Self.CurrentQuests < Self.CurrentLevel and 1 or 2 
     
-    
-    return Self.CurrentQuests[QuestIndex]
+    return Self.CurrentQuests[QuestIndex], Self.CurrentNpc
 end 
 
 function Exports.MarkAsCompleted(Self)
