@@ -71,7 +71,10 @@ function Exports.Attack(MobTable)
                 end 
                 
                 Exports.Grab(MobTable)
-                if CaculateDistance(MobHumanoidRootPart.Position) < 50 then 
+                if CaculateDistance(MobHumanoidRootPart.Position) < 50 then
+                    
+                    ScriptStorage.FunctionsHandler.LocalPlayerController.Methods.EquipTool:Call("Melee")
+                    
                     ScriptStorage.AttackController:Attack()
                 end 
             end 
