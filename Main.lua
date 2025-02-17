@@ -101,8 +101,8 @@ function AwaitUntilPlayerLoaded(Player, Timeout)
     repeat wait() until Player.Character.Humanoid.Health > 0
 end 
 
-function RefreshPlayerData (Player) 
-    for _, ChildInstance in Player.Data:GetChildren() do 
+function RefreshPlayerData () 
+    for _, ChildInstance in LocalPlayer.Data:GetChildren() do 
         pcall(function() 
             ScriptStorage.PlayerData[ChildInstance.Name] = ChildInstance.Value
             print(ChildInstance, ChildInstance.Value)
