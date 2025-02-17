@@ -87,7 +87,10 @@ function Download(ForceSegmant)
                 
             print("[ Debug ]", Index, "/", #Segmants, "Downloading", Segmant, "...") 
             
-            spawn(delfile, FolderPath .. Segmant .. ".lua")
+            spawn(function()
+                delfile(FolderPath .. Segmant .. ".lua")
+            end) 
+            
             local Result = game:HttpGet(CDN_HOST .. Segmant .. ".lua") 
             
             print("[ Debug ] Successfully written", Segmant, ".lua" )
