@@ -17,7 +17,7 @@ end
 local old;
 
 old = hookfunction(
-    require(ReplicatedStorage.Notification).new,
+    require(game.ReplicatedStorage.Notification).new,
     function(a, b)
         
         v21 = tostring(tostring(a or "") .. tostring(b or "")) or ""
