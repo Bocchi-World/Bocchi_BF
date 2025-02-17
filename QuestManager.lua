@@ -31,15 +31,21 @@ function Exports.RefreshQuest(Self)
     local CurrentQuestData 
     
     for QuestID, QuestDatas in Exports.Quests do 
-        if not Exports.BlacklistedQuestIds[QuestID] then 
+        if not Exports.BlacklistedQuestIds[QuestID] then
+            print(35, QuestDatas[1].LevelReq, QuestLevelFlag, QuestDatas[1].LevelReq, ScriptStorage.PlayerData.Level )
             if QuestDatas[1].LevelReq > QuestLevelFlag and QuestDatas[1].LevelReq <= ScriptStorage.PlayerData.Level then 
+                print(QuestID, "passed")
                 QuestLevelFlag = QuestDatas[1].LevelReq  
                 CurrentQuestData = QuestDatas
                 Self.CurrentQuestId = QuestID
             end
-        end 
+        end
     end 
     
+    if not CurrentQuestData then
+        CurrentQuestData = {} 
+        
+    end 
     local LastQuest = CurrentQuestData[#CurrentQuestData] 
     
     for _, Count in ChildQuestCount do 
