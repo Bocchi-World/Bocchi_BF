@@ -86,6 +86,8 @@ function Download(ForceSegmant)
         if not ForceSegmant or Segmant == ForceSegmant then 
                 
             print("[ Debug ]", Index, "/", #Segmants, "Downloading", Segmant, "...") 
+            
+            spawn(delfile, FolderPath .. Segmant .. ".lua")
             local Result = game:HttpGet(CDN_HOST .. Segmant .. ".lua") 
             
             print("[ Debug ] Successfully written", Segmant, ".lua" )
