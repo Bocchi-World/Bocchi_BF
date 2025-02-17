@@ -109,6 +109,8 @@ function RefreshPlayerData (Player)
     end 
 end 
 
+RefreshPlayerData()
+
 function RegisterLocalPlayerEventsConnection() 
     
     for _, Connection in ScriptStorage.Connections.LocalPlayer do 
