@@ -42,10 +42,7 @@ function Exports.RefreshQuest(Self)
         end
     end 
     
-    if not CurrentQuestData then
-        CurrentQuestData = {} 
-        
-    end 
+    
     local LastQuest = CurrentQuestData[#CurrentQuestData] 
     
     for _, Count in LastQuest.Task do 
