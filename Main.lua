@@ -104,7 +104,8 @@ end
 function RefreshPlayerData (Player) 
     for _, ChildInstance in Player.Data:GetChildren() do 
         pcall(function() 
-            ScriptStorage.PlayerData[ChildInstance.Name] = ChildInstance.Value 
+            ScriptStorage.PlayerData[ChildInstance.Name] = ChildInstance.Value
+            print(ChildInstance, ChildInstance.Value)
         end)
     end 
 end 
