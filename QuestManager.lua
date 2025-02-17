@@ -33,7 +33,7 @@ function Exports.RefreshQuest(Self)
     for QuestID, QuestDatas in Exports.Quests do 
         if not Exports.BlacklistedQuestIds[QuestID] then
             print(35, QuestDatas[1].LevelReq, QuestLevelFlag, QuestDatas[1].LevelReq, ScriptStorage.PlayerData.Level )
-            if QuestDatas[1].LevelReq > QuestLevelFlag and QuestDatas[1].LevelReq <= ScriptStorage.PlayerData.Level then 
+            if QuestDatas[1].LevelReq >= QuestLevelFlag and QuestDatas[1].LevelReq <= ScriptStorage.PlayerData.Level then 
                 print(QuestID, "passed")
                 QuestLevelFlag = QuestDatas[1].LevelReq  
                 CurrentQuestData = QuestDatas
