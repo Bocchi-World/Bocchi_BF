@@ -22,6 +22,11 @@ function Exports.Set(Self, Index, Value)
 end 
 
 function Exports.RefreshQuest(Self) 
+    while not ScriptStorage.PlayerData.Level do 
+        wait(1) 
+        print("[ Debug ] Waiting for LocalPlayer datas.")
+    end 
+    
     local QuestLevelFlag = 0  
     local CurrentQuestData 
     
