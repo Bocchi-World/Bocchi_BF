@@ -27,8 +27,8 @@ function Exports.RefreshQuest(Self)
     
     for QuestID, QuestDatas in Exports.Quests do 
         if not Exports.BlacklistedQuestIds[QuestID] then 
-            if QuestDatas[0].LevelReq > QuestLevelFlag and QuestDatas[0].LevelReq <= ScriptStorage.PlayerData.Level then 
-                QuestLevelFlag = QuestDatas[0].LevelReq  
+            if QuestDatas[1].LevelReq > QuestLevelFlag and QuestDatas[1].LevelReq <= ScriptStorage.PlayerData.Level then 
+                QuestLevelFlag = QuestDatas[1].LevelReq  
                 CurrentQuestData = QuestDatas
                 Self.CurrentQuestId = QuestID
             end
