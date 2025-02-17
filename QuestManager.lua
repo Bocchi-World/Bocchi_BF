@@ -48,7 +48,7 @@ function Exports.RefreshQuest(Self)
     end 
     local LastQuest = CurrentQuestData[#CurrentQuestData] 
     
-    for _, Count in ChildQuestCount do 
+    for _, Count in LastQuest.Task do 
         if Count == 1 then 
             table.remove(CurrentQuestData, #CurrentQuestData)
         end 
